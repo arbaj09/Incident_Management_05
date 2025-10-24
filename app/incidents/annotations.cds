@@ -7,31 +7,40 @@ annotate service.Incidents with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : 'customer_ID',
+                Label : 'customer',
                 Value : customer_ID,
             },
             {
                 $Type : 'UI.DataField',
                 Value : title,
             },
-            {
-                $Type : 'UI.DataField',
-                Label : 'urgency_code',
-                Value : urgency_code,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'status_code',
-                Value : status_code,
-            },
         ],
     },
     UI.Facets : [
         {
+            $Type : 'UI.CollectionFacet',
+            Label : 'Overview',
+            ID : 'Overview',
+            Facets : [
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    ID : 'GeneratedFacet1',
+                    Label : 'General Information',
+                    Target : '@UI.FieldGroup#GeneratedGroup',
+                },
+                {
+                    $Type : 'UI.ReferenceFacet',
+                    Label : 'Details',
+                    ID : 'Details',
+                    Target : '@UI.FieldGroup#Details',
+                },
+            ],
+        },
+        {
             $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
-            Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup',
+            Label : 'Conversession',
+            ID : 'Conversession',
+            Target : 'conversation/@UI.LineItem#Conversession',
         },
     ],
     UI.LineItem : [
@@ -48,6 +57,7 @@ annotate service.Incidents with @(
             $Type : 'UI.DataField',
             Value : status.descr,
             Label : 'Status',
+            Criticality : status.criticality,
         },
         {
             $Type : 'UI.DataField',
@@ -59,10 +69,33 @@ annotate service.Incidents with @(
         status_code,
         urgency_code,
     ],
+    UI.HeaderInfo : {
+        TypeName : '',
+        TypeNamePlural : '',
+        TypeImageUrl : 'sap-icon://alert',
+        Title : {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+    },
+    UI.FieldGroup #Details : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : status_code,
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : urgency_code,
+            },
+        ],
+    },
 );
 
 annotate service.Incidents with {
-    customer @Common.ValueList : {
+    customer @(
+        Common.ValueList : {
         $Type : 'Common.ValueListType',
         CollectionPath : 'Customers',
         Parameters : [
@@ -73,14 +106,6 @@ annotate service.Incidents with {
             },
             {
                 $Type : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty : 'firstName',
-            },
-            {
-                $Type : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty : 'lastName',
-            },
-            {
-                $Type : 'Common.ValueListParameterDisplayOnly',
                 ValueListProperty : 'name',
             },
             {
@@ -88,13 +113,16 @@ annotate service.Incidents with {
                 ValueListProperty : 'email',
             },
         ],
-    }
+    },
+        Common.ValueListWithFixedValues : true,
+    )
 };
 
 annotate service.Incidents with {
     status @(
         Common.Label : 'Status',
         Common.ValueListWithFixedValues : true,
+        Common.Text : status.descr,
     )
 };
 
@@ -102,6 +130,7 @@ annotate service.Incidents with {
     urgency @(
         Common.Label : 'Urgency',
         Common.ValueListWithFixedValues : true,
+        Common.Text : urgency.descr,
     )
 };
 
@@ -116,4 +145,24 @@ annotate service.Urgency with {
 annotate service.Urgency with {
     code @Common.Text : descr
 };
+
+annotate service.Incidents.conversation with @(
+    UI.LineItem #Conversession : [
+        {
+            $Type : 'UI.DataField',
+            Value : author,
+            Label : 'Author',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : message,
+            Label : 'message',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : timestamp,
+            Label : 'Date',
+        },
+    ]
+);
 

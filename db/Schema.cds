@@ -7,7 +7,7 @@ namespace sap.capire.incidents;
 */
 entity Incidents : cuid, managed {  
 customer   : Association to Customers;
-title       : String  @title : 'Title';
+title       : String     @title : 'Title';
 urgency       : Association to Urgency default 'M';
 status         : Association to Status default 'N';
 conversation  : Composition of many {
