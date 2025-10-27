@@ -1,0 +1,14 @@
+###  Get all incidents
+
+http://localhost:4004/odata/v4/processor/$metadata
+
+
+### Trigger the Action
+### Trigger the Action
+POST http://localhost:4004/odata/v4/processor/Incidents(3583f982-d7df-4aad-ab26-301d4a157cd7)/closeIncident
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+

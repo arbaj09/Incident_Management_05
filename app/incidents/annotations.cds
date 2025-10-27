@@ -45,6 +45,20 @@ annotate service.Incidents with @(
     ],
     UI.LineItem : [
         {
+            $Type :'UI.DataFieldForAction',
+   
+            Action : 'ProcessorService.Incidents.closeIncident',
+            Label : 'close Incident'
+
+        },
+         {
+            $Type :'UI.DataFieldForAction',
+   
+            Action : 'ProcessorService.Incidents.fillTitle',
+            Label : 'Fill Title'
+
+        },
+        {
             $Type : 'UI.DataField',
             Value : title,
         },
@@ -165,4 +179,9 @@ annotate service.Incidents.conversation with @(
         },
     ]
 );
+
+
+
+
+
 
