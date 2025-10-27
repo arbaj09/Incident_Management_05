@@ -9,7 +9,7 @@ entity Incidents : cuid, managed {
 customer   : Association to Customers;
 title       : String     @title : 'Title';
 urgency       : Association to Urgency default 'M';
-status         : Association to Status default 'N';
+status         : Association to Status ;
 conversation  : Composition of many {
     key ID    : UUID;
     timestamp : type of managed:createdAt;

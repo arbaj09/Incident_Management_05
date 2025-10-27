@@ -6,13 +6,15 @@ using { sap.capire.incidents as my } from '../db/Schema';
 service ProcessorService { 
 
 
-    entity Incidents as projection on my.Incidents
-    actions{
-    // Define a bound action to close an incident
-    action closeIncident() returns String;
-    action fillTitle() returns Incidents;
+    entity Incidents as projection on my.Incidents;
+
+    // actions{
+    // // Define a bound action to close an incident
+    // action closeIncident() returns String;
+    
+    // action fillTitle() returns Incidents;
  
-    }
+    // }
 
 
     // with exclude  keyword you can hide fields

@@ -1,10 +1,10 @@
 const cds = require('@sap/cds')
-const { SELECT } = require('@sap/cds/lib/ql/cds-ql')
-const UPDATE = require('@sap/cds/lib/ql/UPDATE')
 
 module.exports = class ProcessorService extends cds.ApplicationService { init() {
 
-  const { Incidents, Customers } = cds.entities('ProcessorService')
+  // const { Incidents, Customers } = cds.entities('ProcessorService')
+
+  const {Incidents, Customers} = this.entities;
 
   this.before (['CREATE', 'UPDATE'], Incidents, async (req) => {
     console.log('Before CREATE/UPDATE Incidents', req.data)
@@ -18,35 +18,43 @@ module.exports = class ProcessorService extends cds.ApplicationService { init() 
   this.after ('READ', Customers, async (customers, req) => {
     console.log('After READ Customers', customers)
   })
+  this.before("CREATE",Incidents,this.ChangeUrgencyDueToSubject);
+  this.before("CREATE" ,Incidents, this.onVaildation)
 
-  this.on ('closeIncident', async (req) => {
- const { ID } = req.params[0];
- console.log('incident id ' , ID)
-     // Get the current incident
-    const incident = await SELECT.one.from(Incidents).where({ ID });
-    if (!incident) return req.error(404, 'Incident not found');
+  this.before("CREATE", Incidents, this.AutoFill)
 
-    // Update the status
-      await UPDATE(Incidents).set({ status_code: 'C' }).where({ ID });
 
-     // Check if already closed
-  if (incident.status_code === 'C') {
-     req.reject(400, `Incident ${ID} is already closed`);
-     return
-  }  
+  return super.init()
 
-      return req.info('Incident closed');
-      
+
+
+} 
+
+ChangeUrgencyDueToSubject(req){
+    let urgent = req.data.title?.match(/urgent/i)
+
+    console.log("Uregency" , req.data)
+    if (urgent) req.data.urgency_code = 'H'
+
+
+  }
+
+  onVaildation(req){
+   const { title, status_code } = req.data
+  if (!title) req.reject("Please Enter the Title")
+  if (status_code !== 'N') req.reject("During Creation, Status Should be New")
+
+  }
+
+  AutoFill(req){
+   if (!req.data.conversation) {
+    req.data.conversation = []
+  }
+  req.data.conversation.push({
+    message: 'New Incident Created test'
   })
 
-  this.on('fillTitle', async(req)=>{
-    const {ID} = req.params[0];
-   const Incident  = await SELECT.one.from(Incidents).where({ID})
-   if (!Incident.title) {
-    await UPDATE(Incidents).set({ title: 'changed title'}).where({ID})
-    return req.info(`Changed Title`)
-   }
   }
-)
-  return super.init()
-}}
+
+
+}
