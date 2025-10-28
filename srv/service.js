@@ -4,7 +4,7 @@ module.exports = class ProcessorService extends cds.ApplicationService { init() 
 
   // const { Incidents, Customers } = cds.entities('ProcessorService')
 
-  const {Incidents, Customers} = this.entities;
+  const {Incidents, Customers} = this.entities  || {};
 
   this.before (['CREATE', 'UPDATE'], Incidents, async (req) => {
     console.log('Before CREATE/UPDATE Incidents', req.data)
