@@ -5,9 +5,10 @@ using { sap.capire.incidents as my } from '../db/Schema';
 /**
  * Service used by support personell, i.e. the incidents' 'processors'.
  */
+@requires: 'authenticated-user'
 service ProcessorService { 
 
-
+    @requires: 'Processor'
     entity Incidents as projection on my.Incidents;
 
     // actions{
@@ -40,7 +41,11 @@ annotate ProcessorService.Incidents with @odata.draft.enabled ;
 /**
  * Service used by administrators to manage customers and incidents.
  */
+
+ @requires: 'authenticated-user'
 service AdminService {
+    
+    @requires: 'Admin'
     entity Customers as projection on my.Customers;
 
     entity Incidents as projection on my.Incidents;

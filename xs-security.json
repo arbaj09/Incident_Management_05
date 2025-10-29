@@ -1,0 +1,42 @@
+{
+  "xsappname": "incident-management5",
+  "tenant-mode": "dedicated",
+  "description": "Security configuration for the Incident Management CAP application.",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Processor",
+      "description": "Processor role for support users"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin role for administrators"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Processor",
+      "description": "Role template for support processors",
+      "scope-references": [
+        "$XSAPPNAME.Processor"
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Role template for administrators",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ]
+    }
+  ],
+  "authorities": [
+    "$ACCEPT_GRANTED_AUTHORITIES"
+  ],
+  "oauth2-configuration": {
+    "token-validity": 900,
+    "redirect-uris": [
+      "https://api.cf.us10-001.hana.ondemand.com"
+    ]
+  },
+  "xsenableasyncservice": "true",
+  "attributes": []
+}
